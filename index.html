@@ -1,206 +1,359 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ace Learning Foundation — Learn, Grow, Achieve.">
   <title>Ace Learning Foundation</title>
-
+  <meta name="description" content="Ace Learning Foundation — Learn, Lead, Succeed.">
   <style>
     :root {
-      --navy: #10264b;
-      --gold: #d8ad43;
-      --white: #ffffff;
-      --light: #f4f6fa;
-      --text: #243047;
+      --navy: #102a43;
+      --blue: #1769aa;
+      --gold: #f4b942;
+      --light: #f4f8fb;
+      --ink: #243b53;
+      --muted: #627d98;
     }
-
     * { box-sizing: border-box; }
-
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
       line-height: 1.6;
     }
-
-    header {
+    a { color: inherit; }
+    .topbar {
       background: var(--navy);
-      color: var(--white);
-      padding: 22px 6%;
-    }
-
-    .brand { margin: 0; font-size: 1.6rem; }
-    .motto { color: var(--gold); margin: 4px 0 0; }
-
-    nav { margin-top: 15px; display: flex; gap: 18px; flex-wrap: wrap; }
-    nav a { color: white; text-decoration: none; }
-
-    .hero {
-      padding: 70px 6%;
+      color: white;
       text-align: center;
-      background: var(--light);
+      padding: 9px 15px;
+      font-size: .9rem;
     }
-
-    .hero h2 { color: var(--navy); font-size: clamp(2rem, 5vw, 3.5rem); }
-    .hero p { max-width: 650px; margin: 0 auto 22px; }
-
-    .button {
+    header {
+      background: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 12px #102a4318;
+    }
+    .nav {
+      max-width: 1100px;
+      margin: auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--navy);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .logo { width: 48px; height: 48px; flex-shrink: 0; }
+    .brand small {
+      display: block;
+      color: var(--blue);
+      font-size: .7rem;
+      letter-spacing: .08em;
+    }
+    nav { display: flex; flex-wrap: wrap; gap: 13px; }
+    nav a { text-decoration: none; font-weight: bold; font-size: .9rem; }
+    nav a:hover { color: var(--blue); }
+    .hero {
+      background: linear-gradient(120deg, #102a43, #1769aa);
+      color: white;
+      padding: 80px 20px;
+    }
+    .container { max-width: 1100px; margin: auto; }
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: bold;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      line-height: 1.12;
+      max-width: 750px;
+      margin: 12px 0;
+    }
+    .hero p { max-width: 680px; font-size: 1.1rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 25px; }
+    .btn {
       display: inline-block;
       padding: 12px 20px;
-      border-radius: 5px;
-      background: var(--gold);
-      color: #17233b;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: bold;
     }
-
-    section { padding: 42px 6%; }
-    h2, h3 { color: var(--navy); }
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; }
-    .feature, .post { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px #0000000d; }
-    #blog { background: var(--light); }
-    #posts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
-    .status { color: #555; }
-    footer { background: var(--navy); color: white; text-align: center; padding: 22px; }
-
-    @media (max-width: 500px) {
-      .hero { padding: 45px 6%; }
-      nav { gap: 12px; }
+    .gold { background: var(--gold); color: var(--navy); }
+    .outline { border: 2px solid white; color: white; }
+    section { padding: 60px 20px; scroll-margin-top: 100px; }
+    .soft { background: var(--light); }
+    .heading { text-align: center; max-width: 750px; margin: 0 auto 32px; }
+    .heading h2 { color: var(--navy); font-size: 2rem; line-height: 1.2; }
+    .heading p { color: var(--muted); }
+    .about-grid, .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .panel {
+      padding: 25px;
+      border-radius: 14px;
+      background: var(--light);
+      border-left: 5px solid var(--gold);
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .card {
+      padding: 24px;
+      border: 1px solid #d9e2ec;
+      border-radius: 14px;
+      background: white;
+      box-shadow: 0 5px 18px #102a430b;
+    }
+    .card h3, .panel h3 { color: var(--navy); }
+    .symbol { font-size: 2rem; }
+    .admissions { background: var(--navy); color: white; }
+    .admissions .heading h2, .admissions .heading p { color: white; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .step { border: 1px solid #ffffff50; padding: 20px; border-radius: 12px; }
+    .step strong { display: block; color: var(--gold); margin-bottom: 8px; }
+    .notice {
+      background: #fff8e6;
+      border: 1px solid #f3d58b;
+      padding: 22px;
+      border-radius: 12px;
+    }
+    footer {
+      background: #0b1f33;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+    footer p { margin: 5px; }
+    @media (max-width: 760px) {
+      .nav { flex-direction: column; align-items: flex-start; }
+      nav { gap: 10px 14px; }
+      .hero { padding: 55px 20px; }
+      .about-grid, .contact-grid, .cards, .steps {
+        grid-template-columns: 1fr;
+      }
+      section { padding: 45px 18px; }
     }
   </style>
 </head>
-
 <body>
+  <div class="topbar">
+    Welcome to Ace Learning Foundation — Building a brighter future through education.
+  </div>
+
   <header>
-    <h1 class="brand">ACE LEARNING FOUNDATION</h1>
-    <p class="motto">Learn • Grow • Achieve</p>
-    <nav aria-label="Main navigation">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#programs">Programs</a>
-      <a href="#blog">School Blog</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <div class="nav">
+      <a class="brand" href="#home">
+        <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="School logo">
+          <polygon points="50,5 95,90 5,90" fill="#1769aa" stroke="#f4b942" stroke-width="5"/>
+          <polygon points="50,24 77,76 23,76" fill="white"/>
+          <path d="M32 44 Q50 36 68 44 L68 62 Q50 54 32 62 Z"
+                fill="#f4b942" stroke="#102a43" stroke-width="2"/>
+          <path d="M50 42 V60" stroke="#102a43" stroke-width="2"/>
+        </svg>
+        <span>ACE LEARNING FOUNDATION
+          <small>LEARN • LEAD • SUCCEED</small>
+        </span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#academics">Academics</a>
+        <a href="#admissions">Admissions</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
   </header>
 
   <main>
     <section class="hero" id="home">
-      <h2>Building Knowledge. Inspiring Futures.</h2>
-      <p>Welcome to Ace Learning Foundation, where learners are encouraged to grow in knowledge, character, creativity, and confidence.</p>
-      <a class="button" href="#about">Discover Our School</a>
-    </section>
-
-    <section id="about">
-      <h2>About Our School</h2>
-      <p>Ace Learning Foundation is committed to supporting students through learning, personal growth, and preparation for a brighter future.</p>
-    </section>
-
-    <section id="programs">
-      <h2>Our Learning Community</h2>
-      <div class="features">
-        <article class="feature">
-          <h3>Quality Education</h3>
-          <p>Encouraging curiosity, understanding, and lifelong learning.</p>
-        </article>
-        <article class="feature">
-          <h3>Character Development</h3>
-          <p>Promoting respect, responsibility, and cooperation.</p>
-        </article>
-        <article class="feature">
-          <h3>Student Growth</h3>
-          <p>Helping every learner build skills and confidence.</p>
-        </article>
+      <div class="container">
+        <div class="eyebrow">A foundation for the future</div>
+        <h1>Discover Your Potential. Shape Your Future.</h1>
+        <p>
+          At Ace Learning Foundation, we believe every learner deserves
+          the opportunity to grow, think creatively, build good character,
+          and prepare for a brighter future.
+        </p>
+        <div class="actions">
+          <a class="btn gold" href="#admissions">Explore Admissions</a>
+          <a class="btn outline" href="#about">Discover Our School</a>
+        </div>
       </div>
     </section>
 
-    <section id="blog">
-      <h2>School News & Blog</h2>
-      <p>Read announcements, learning updates, and news from our school community.</p>
-      <p id="blog-status" class="status" role="status">The blog connection has not been configured yet.</p>
-      <div id="posts"></div>
+    <section id="about">
+      <div class="container">
+        <div class="heading">
+          <h2>Welcome to Ace Learning Foundation</h2>
+          <p>A learning community focused on knowledge, confidence,
+            responsibility, and lifelong growth.</p>
+        </div>
+        <div class="about-grid">
+          <div>
+            <h3>Learning that opens doors</h3>
+            <p>
+              Our goal is to help learners develop knowledge, practical
+              skills, creativity, and the values needed to contribute
+              positively to their communities.
+            </p>
+            <p>
+              We aim to create a respectful learning environment where
+              students can ask questions, work together, and strive
+              for excellence.
+            </p>
+          </div>
+          <div class="panel">
+            <h3>Our Mission</h3>
+            <p>To support academic development, strong character,
+              and responsible leadership.</p>
+            <h3>Our Vision</h3>
+            <p>To nurture capable, compassionate, and confident learners
+              ready to make a positive difference.</p>
+            <h3>Our Values</h3>
+            <p>Respect • Integrity • Excellence • Responsibility • Community</p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="contact">
-      <h2>Contact Our School</h2>
-      <p>For admissions and school enquiries, please contact the school administration.</p>
-      <p>Ace Learning Foundation</p>
-      <p>+231887266006</p>
+    <section class="soft" id="academics">
+      <div class="container">
+        <div class="heading">
+          <h2>Our Learning Priorities</h2>
+          <p>We value a balanced education that builds strong foundations
+            and prepares learners for future opportunities.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="symbol">📘</div>
+            <h3>Academic Growth</h3>
+            <p>Encouraging curiosity, literacy, numeracy, critical thinking,
+              and a commitment to learning.</p>
+          </article>
+          <article class="card">
+            <div class="symbol">🌱</div>
+            <h3>Character & Values</h3>
+            <p>Promoting respect, honesty, kindness, teamwork,
+              discipline, and responsibility.</p>
+          </article>
+          <article class="card">
+            <div class="symbol">💡</div>
+            <h3>Skills for Tomorrow</h3>
+            <p>Supporting creativity, communication, problem-solving,
+              and readiness for a changing world.</p>
+          </article>
+        </div>
+        <p style="text-align:center;color:#627d98;margin-top:22px">
+          Contact the school for confirmed grade levels and programmes.
+        </p>
+      </div>
+    </section>
+
+    <section class="admissions" id="admissions">
+      <div class="container">
+        <div class="heading">
+          <h2>Admissions & Enquiries</h2>
+          <p>Contact the school for current admission details,
+            requirements, and available places.</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <strong>01 — Make an enquiry</strong>
+            Ask about programmes, entry requirements, and availability.
+          </div>
+          <div class="step">
+            <strong>02 — Prepare documents</strong>
+            Confirm which application forms and supporting documents
+            the school requires.
+          </div>
+          <div class="step">
+            <strong>03 — Follow up</strong>
+            Contact the school office about your application and next steps.
+          </div>
+        </div>
+        <div class="actions" style="justify-content:center">
+          <a class="btn gold" href="#contact">Contact the School</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="news">
+      <div class="container">
+        <div class="heading">
+          <h2>School News & Announcements</h2>
+          <p>Updates for families, learners, and our community.</p>
+        </div>
+        <div class="notice">
+          <strong>Welcome to our school website!</strong>
+          <p>
+            Check this section for verified school announcements,
+            term dates, events, achievements, and important notices.
+            Contact the school to confirm current dates and information.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="soft" id="contact">
+      <div class="container">
+        <div class="heading">
+          <h2>Contact Ace Learning Foundation</h2>
+          <p>We welcome questions from parents, guardians,
+            prospective learners, and community members.</p>
+        </div>
+        <div class="contact-grid">
+          <div class="panel">
+            <h3>School Enquiries</h3>
+            <p><strong>School:</strong> Ace Learning Foundation</p>
+            <p><strong>Location:</strong> Add the school's confirmed address.</p>
+            <p><strong>Phone:</strong> Add the official school phone number.</p>
+            <p><strong>Email:</strong> Add the official school email address.</p>
+          </div>
+          <div class="panel">
+            <h3>Office Information</h3>
+            <p>
+              For admissions, school programmes, visits, and general
+              enquiries, please contact the school using its official
+              contact details.
+            </p>
+            <p><strong>Office hours:</strong> Please confirm with the school.</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>© <span id="year"></span> Ace Jeffrey. All rights reserved.</p>
-    <p>Learn • Grow • Achieve</p>
+    <p><strong>Ace Learning Foundation</strong></p>
+    <p>Learn • Lead • Succeed</p>
+    <p>&copy; <span id="year">2026</span> Ace Learning Foundation. All rights reserved.</p>
   </footer>
 
   <script>
-    
-
-  document.getElementById("year").textContent =
-    new Date().getFullYear();
-
-  const SUPABASE_URL = "https://mfxcesgugxhxsnwigjju.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_rEETWG4OakEty3ycKA5f8Q_HSYfH-R7";
-
-  async function loadSchoolBlog() {
-    const status = document.getElementById("blog-status");
-    const postsContainer = document.getElementById("posts");
-
-    status.textContent = "Loading school news...";
-
-    try {
-      const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/blog_posts?select=title,slug,excerpt,author,created_at&published=eq.true&order=created_at.desc`,
-        {
-          headers: {
-            apikey: SUPABASE_PUBLISHABLE_KEY,
-            Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
-          }
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Blog request failed: " + response.status);
-      }
-
-      const posts = await response.json();
-      postsContainer.replaceChildren();
-
-      if (posts.length === 0) {
-        status.textContent = "No school news has been published yet.";
-        return;
-      }
-
-      posts.forEach(post => {
-        const article = document.createElement("article");
-        article.className = "post";
-
-        const title = document.createElement("h3");
-        title.textContent = post.title;
-
-        const excerpt = document.createElement("p");
-        excerpt.textContent = post.excerpt || "";
-
-        const author = document.createElement("small");
-        author.textContent = "By " + post.author;
-
-        article.append(title, excerpt, author);
-        postsContainer.appendChild(article);
-      });
-
-      status.textContent = "Latest news from Ace Learning Foundation";
-    } catch (error) {
-      console.error(error);
-      status.textContent =
-        "School news could not load. Please check your connection settings.";
-    }
-  }
-
-  loadSchoolBlog();
-
-
+    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
