@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ace Learning Foundation — Learn, Grow, Achieve.">
+  <title>Ace Learning Foundation</title>
+
+  <style>
+    :root {
+      --navy: #10264b;
+      --gold: #d8ad43;
+      --white: #ffffff;
+      --light: #f4f6fa;
+      --text: #243047;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 22px 6%;
+    }
+
+    .brand { margin: 0; font-size: 1.6rem; }
+    .motto { color: var(--gold); margin: 4px 0 0; }
+
+    nav { margin-top: 15px; display: flex; gap: 18px; flex-wrap: wrap; }
+    nav a { color: white; text-decoration: none; }
+
+    .hero {
+      padding: 70px 6%;
+      text-align: center;
+      background: var(--light);
+    }
+
+    .hero h2 { color: var(--navy); font-size: clamp(2rem, 5vw, 3.5rem); }
+    .hero p { max-width: 650px; margin: 0 auto 22px; }
+
+    .button {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 5px;
+      background: var(--gold);
+      color: #17233b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    section { padding: 42px 6%; }
+    h2, h3 { color: var(--navy); }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; }
+    .feature, .post { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px #0000000d; }
+    #blog { background: var(--light); }
+    #posts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .status { color: #555; }
+    footer { background: var(--navy); color: white; text-align: center; padding: 22px; }
+
+    @media (max-width: 500px) {
+      .hero { padding: 45px 6%; }
+      nav { gap: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1 class="brand">ACE LEARNING FOUNDATION</h1>
+    <p class="motto">Learn • Grow • Achieve</p>
+    <nav aria-label="Main navigation">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#programs">Programs</a>
+      <a href="#blog">School Blog</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <h2>Building Knowledge. Inspiring Futures.</h2>
+      <p>Welcome to Ace Learning Foundation, where learners are encouraged to grow in knowledge, character, creativity, and confidence.</p>
+      <a class="button" href="#about">Discover Our School</a>
+    </section>
+
+    <section id="about">
+      <h2>About Our School</h2>
+      <p>Ace Learning Foundation is committed to supporting students through learning, personal growth, and preparation for a brighter future.</p>
+    </section>
+
+    <section id="programs">
+      <h2>Our Learning Community</h2>
+      <div class="features">
+        <article class="feature">
+          <h3>Quality Education</h3>
+          <p>Encouraging curiosity, understanding, and lifelong learning.</p>
+        </article>
+        <article class="feature">
+          <h3>Character Development</h3>
+          <p>Promoting respect, responsibility, and cooperation.</p>
+        </article>
+        <article class="feature">
+          <h3>Student Growth</h3>
+          <p>Helping every learner build skills and confidence.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="blog">
+      <h2>School News & Blog</h2>
+      <p>Read announcements, learning updates, and news from our school community.</p>
+      <p id="blog-status" class="status" role="status">The blog connection has not been configured yet.</p>
+      <div id="posts"></div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Our School</h2>
+      <p>For admissions and school enquiries, please contact the school administration.</p>
+      <p>Ace Learning Foundation</p>
+      <p>+231887266006</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Ace Learning Foundation. All rights reserved.</p>
+    <p>Learn • Grow • Achieve</p>
+  </footer>
+
+  <script>
+    
+
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+  const SUPABASE_URL = "https://mfxcesgugxhxsnwigjju.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_rEETWG4OakEty3ycKA5f8Q_HSYfH-R7";
+
+  async function loadSchoolBlog() {
+    const status = document.getElementById("blog-status");
+    const postsContainer = document.getElementById("posts");
+
+    status.textContent = "Loading school news...";
+
+    try {
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/blog_posts?select=title,slug,excerpt,author,created_at&published=eq.true&order=created_at.desc`,
+        {
+          headers: {
+            apikey: SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Blog request failed: " + response.status);
+      }
+
+      const posts = await response.json();
+      postsContainer.replaceChildren();
+
+      if (posts.length === 0) {
+        status.textContent = "No school news has been published yet.";
+        return;
+      }
+
+      posts.forEach(post => {
+        const article = document.createElement("article");
+        article.className = "post";
+
+        const title = document.createElement("h3");
+        title.textContent = post.title;
+
+        const excerpt = document.createElement("p");
+        excerpt.textContent = post.excerpt || "";
+
+        const author = document.createElement("small");
+        author.textContent = "By " + post.author;
+
+        article.append(title, excerpt, author);
+        postsContainer.appendChild(article);
+      });
+
+      status.textContent = "Latest news from Ace Learning Foundation";
+    } catch (error) {
+      console.error(error);
+      status.textContent =
+        "School news could not load. Please check your connection settings.";
+    }
+  }
+
+  loadSchoolBlog();
+
+
+  </script>
+</body>
+</html>

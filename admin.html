@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>School Admin | Ace Learning Foundation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f5fa;
+      color: #243047;
+    }
+    header {
+      background: #10264b;
+      color: white;
+      padding: 22px;
+      text-align: center;
+    }
+    header p { color: #d8ad43; }
+    main {
+      max-width: 720px;
+      margin: 25px auto;
+      padding: 20px;
+    }
+    .panel {
+      background: white;
+      padding: 22px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px #00000010;
+    }
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ccd3df;
+      border-radius: 5px;
+      font: inherit;
+      box-sizing: border-box;
+    }
+    textarea { min-height: 140px; }
+    button {
+      margin-top: 16px;
+      padding: 12px 18px;
+      background: #10264b;
+      color: white;
+      border: 0;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .secondary { background: #68758a; }
+    .gold { background: #d8ad43; color: #17233b; }
+    #editor { display: none; }
+    #status { overflow-wrap: anywhere; }
+    .hint { color: #5b6575; font-size: 0.92rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ACE LEARNING FOUNDATION</h1>
+    <p>Administrator Dashboard · Learn • Grow • Achieve</p>
+  </header>
+
+  <main>
+    <section class="panel" id="login">
+      <h2>Administrator Sign In</h2>
+      <p>Sign in with your authorized school administrator account.</p>
+
+      <form id="login-form">
+        <label for="email">Email address</label>
+        <input id="email" type="email" required autocomplete="username">
+
+        <label for="password">Password</label>
+        <input id="password" type="password" required
+               autocomplete="current-password">
+
+        <button id="login-button" type="submit">Sign In</button>
+      </form>
+    </section>
+
+    <section class="panel" id="editor">
+      <h2>Create a School Blog Post</h2>
+      <p class="hint">Save a draft first, or select publish to make it public.</p>
+
+      <form id="post-form">
+        <label for="title">Post title</label>
+        <input id="title" required maxlength="180"
+               placeholder="Example: Welcome to Our New School Term">
+
+        <label for="slug">Web address name (slug)</label>
+        <input id="slug" required pattern="[a-z0-9-]+"
+               placeholder="welcome-to-our-new-school-term">
+        <p class="hint">Use lowercase letters, numbers, and hyphens only.</p>
+
+        <label for="excerpt">Short summary</label>
+        <textarea id="excerpt" maxlength="500" required
+          placeholder="Write a short summary for the homepage."></textarea>
+
+        <label for="content">Full article</label>
+        <textarea id="content" required
+          placeholder="Write your complete school announcement here."></textarea>
+
+        <label for="author">Author</label>
+        <input id="author" value="Ace Learning Foundation" required>
+
+        <label>
+          <input id="published" type="checkbox"
+                 style="width:auto">
+          Publish this post immediately
+        </label>
+
+        <button id="save-button" type="submit">Save Blog Post</button>
+      </form>
+
+      <button id="logout-button" class="secondary" type="button">
+        Sign Out
+      </button>
+    </section>
+
+    <section class="panel">
+      <h2>Status</h2>
+      <p id="status" role="status">Please sign in to manage school posts.</p>
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://mfxcesgugxhxsnwigjju.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_rEETWG4OakEty3ycKA5f8Q_HSYfH-R7";
+
+    let accessToken = null;
+
+    const loginPanel = document.getElementById("login");
+    const editorPanel = document.getElementById("editor");
+    const statusBox = document.getElementById("status");
+
+    function setStatus(message) {
+      statusBox.textContent = message;
+    }
+
+    function makeSlug(value) {
+      return value.toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    document.getElementById("title").addEventListener("input", () => {
+      const title = document.getElementById("title").value;
+      document.getElementById("slug").value = makeSlug(title);
+    });
+
+    document.getElementById("login-form").addEventListener(
+      "submit", async (event) => {
+        event.preventDefault();
+
+        const button = document.getElementById("login-button");
+        button.disabled = true;
+        setStatus("Signing in...");
+
+        try {
+          const response = await fetch(
+            `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_PUBLISHABLE_KEY
+              },
+              body: JSON.stringify({
+                email: document.getElementById("email").value.trim(),
+                password: document.getElementById("password").value
+              })
+            }
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.msg || data.message ||
+                            data.error_description ||
+                            "Sign-in failed. Check your details.");
+          }
+
+          accessToken = data.access_token;
+          document.getElementById("password").value = "";
+          loginPanel.style.display = "none";
+          editorPanel.style.display = "block";
+          setStatus("Signed in. You can now create a post.");
+        } catch (error) {
+          setStatus("Sign-in problem: " + error.message);
+        } finally {
+          button.disabled = false;
+        }
+      }
+    );
+
+    document.getElementById("post-form").addEventListener(
+      "submit", async (event) => {
+        event.preventDefault();
+
+        if (!accessToken) {
+          setStatus("Please sign in first.");
+          return;
+        }
+
+        const button = document.getElementById("save-button");
+        button.disabled = true;
+        setStatus("Saving your post...");
+
+        const post = {
+          title: document.getElementById("title").value.trim(),
+          slug: document.getElementById("slug").value.trim(),
+          excerpt: document.getElementById("excerpt").value.trim(),
+          content: document.getElementById("content").value.trim(),
+          author: document.getElementById("author").value.trim(),
+          published: document.getElementById("published").checked
+        };
+
+        try {
+          const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/blog_posts`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_PUBLISHABLE_KEY,
+                "Authorization": `Bearer ${accessToken}`,
+                "Prefer": "return=minimal"
+              },
+              body: JSON.stringify(post)
+            }
+          );
+
+          if (!response.ok) {
+            const detail = await response.text();
+            throw new Error(detail || "Could not save the post.");
+          }
+
+          document.getElementById("post-form").reset();
+          document.getElementById("author").value =
+            "Ace Learning Foundation";
+
+          setStatus(post.published
+            ? "Post published successfully!"
+            : "Draft saved successfully!");
+        } catch (error) {
+          setStatus("Save problem: " + error.message);
+        } finally {
+          button.disabled = false;
+        }
+      }
+    );
+
+    document.getElementById("logout-button").addEventListener("click", () => {
+      accessToken = null;
+      document.getElementById("post-form").reset();
+      document.getElementById("author").value =
+        "Ace Learning Foundation";
+      editorPanel.style.display = "none";
+      loginPanel.style.display = "block";
+      setStatus("Signed out. Sign in again to manage school posts.");
+    });
+  </script>
+</body>
+</html>
