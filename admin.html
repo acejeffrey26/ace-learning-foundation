@@ -219,6 +219,7 @@
           accessToken = data.access_token;
           document.getElementById("password").value = "";
           loginPanel.style.display = "none";
+          galleryUpload.style.display = "none";
           editorPanel.style.display = "block";
           setStatus("Signed in. You can now create a post.");
         } catch (error) {
