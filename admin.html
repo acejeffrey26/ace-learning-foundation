@@ -219,8 +219,9 @@
           accessToken = data.access_token;
           document.getElementById("password").value = "";
           loginPanel.style.display = "none";
-          editorPanel.style.display = "block";
           galleryUpload.style.display = "block";
+          editorPanel.style.display = "block";
+          
           setStatus("Signed in. You can now create a post.");
         } catch (error) {
           setStatus("Sign-in problem: " + error.message);
