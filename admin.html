@@ -118,6 +118,34 @@
         <button id="save-button" type="submit">Save Blog Post</button>
       </form>
 
+      <section class="panel" id="gallery-upload">
+        <h2>Upload School Photos</h2>
+        <p class="hint">Upload photos for the school gallery.</p>
+
+        <form id="photo-form">
+          <label for="photo-file">Choose a school photo</label>
+          <input
+            id="photo-file"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            required
+          >
+
+          <label for="photo-name">Photo filename</label>
+          <input
+            id="photo-name"
+            type="text"
+            placeholder="Example: school-building.jpg"
+            required
+          >
+
+          <button id="photo-upload-button" type="submit">
+            Upload Photo
+          </button>
+        </form>
+      </section>
+
+      
       <button id="logout-button" class="secondary" type="button">
         Sign Out
       </button>
