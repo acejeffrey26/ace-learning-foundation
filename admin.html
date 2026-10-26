@@ -295,6 +295,89 @@
       loginPanel.style.display = "block";
       setStatus("Signed out. Sign in again to manage school posts.");
     });
+
+    
+    // Show the gallery uploader only to signed-in administrators.
+    const photoForm = document.getElementById("photo-form");
+    const galleryUpload = document.getElementById("gallery-upload");
+
+    galleryUpload.style.display = "none";
+
+    document.getElementById("photo-form").addEventListener(
+      "submit", async (event) => {
+        event.preventDefault();
+
+        if (!accessToken) {
+          setStatus("Please sign in first.");
+          return;
+        }
+
+        const fileInput = document.getElementById("photo-file");
+        const nameInput = document.getElementById("photo-name");
+        const button = document.getElementById("photo-upload-button");
+        const file = fileInput.files[0];
+
+        if (!file) {
+          setStatus("Please choose a photo.");
+          return;
+        }
+
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+          setStatus("Choose a JPG, PNG, or WebP image.");
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          setStatus("The photo must be 5 MB or smaller.");
+          return;
+        }
+
+        const filename = nameInput.value.trim().split("/").pop();
+
+        if (!filename || !/\.(jpg|jpeg|png|webp)$/i.test(filename)) {
+          setStatus("Use a filename ending in .jpg, .jpeg, .png, or .webp.");
+          return;
+        }
+
+        const safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, "-");
+        const storagePath = "gallery/" + safeFilename;
+
+        button.disabled = true;
+        setStatus("Uploading school photo...");
+
+        try {
+          const response = await fetch(
+            `${SUPABASE_URL}/storage/v1/object/school-photos/${storagePath}`,
+            {
+              method: "POST",
+              headers: {
+                "apikey": SUPABASE_PUBLISHABLE_KEY,
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": file.type,
+                "x-upsert": "false"
+              },
+              body: file
+            }
+          );
+
+          if (!response.ok) {
+            const detail = await response.text();
+            throw new Error(detail || "Photo upload failed.");
+          }
+
+          photoForm.reset();
+          setStatus("Photo uploaded successfully to the private school gallery.");
+        } catch (error) {
+          setStatus("Photo upload problem: " + error.message);
+        } finally {
+          button.disabled = false;
+        }
+      }
+    );
+  
   </script>
+
+
+  
 </body>
 </html>
